@@ -1,8 +1,11 @@
 fastapi
 uvicorn
 python-multipart
-pypdf
-sentence-transformers
+langchain
+langchain-community
+langchain-openai
+langchain-text-splitters
 faiss-cpu
-groq
-sqlalchemy
+pypdf
+python-dotenv
+pyyaml
