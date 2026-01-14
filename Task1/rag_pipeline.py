@@ -29,7 +29,7 @@ prompt = None
 def process_document(file_path: str):
     global vectorstore, retriever, llm, prompt
 
-    # 1️⃣ Load file
+    # 1️ Load file
     if file_path.endswith(".pdf"):
         loader = PyPDFLoader(file_path)
     else:
@@ -37,7 +37,7 @@ def process_document(file_path: str):
 
     documents = loader.load()
 
-    # 2️⃣ Split
+    # 2️ Split
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=config["chunking"]["chunk_size"],
         chunk_overlap=config["chunking"]["chunk_overlap"]
@@ -45,12 +45,12 @@ def process_document(file_path: str):
 
     chunks = splitter.split_documents(documents)
 
-    # 3️⃣ Embeddings
+    # 3️ Embeddings
     embeddings = OpenAIEmbeddings(
         model=config["openai"]["embedding_model"]
     )
 
-    # 4️⃣ FAISS
+    # 4️ FAISS
     vectorstore = FAISS.from_documents(chunks, embeddings)
 
     retriever = vectorstore.as_retriever(
@@ -58,13 +58,13 @@ def process_document(file_path: str):
         search_kwargs={"k": config["retriever"]["k"]}
     )
 
-    # 5️⃣ LLM
+    # 5️ LLM
     llm = ChatOpenAI(
         model=config["openai"]["chat_model"],
         temperature=0
     )
 
-    # 6️⃣ Prompt (same as notebook)
+    # 6️ Prompt (same as notebook)
     prompt = ChatPromptTemplate.from_template(
         """
         Answer the question using only the context below.
@@ -85,7 +85,7 @@ def ask_question(question: str):
     if retriever is None:
         raise RuntimeError("No document uploaded yet")
 
-    # 🔥 SAME AS YOUR NOTEBOOK
+    
     retrieved_docs = retriever.invoke(question)
 
     context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
